@@ -24,10 +24,7 @@ function getTimeString($time)
     return ['минут', 'часов'];
   }
 }
+$h = +date('G');
+$m = +date('i');
 
-print_r(getTimeString(2));
-
-
-//echo date('G i');
-
-//echo fmod(33,10);
+echo "$h ".getTimeString($h)[1]." $m ".getTimeString($m)[0];
