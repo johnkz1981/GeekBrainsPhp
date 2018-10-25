@@ -4,14 +4,30 @@
  * 22 часа 15 минут
  * 21 час 43 минуты
  *
- * $Hour {час/часа/часов}
- * час: 1
- * часа:
- * $Minute {минута/минуты/минут}
+ * минута/час: 1,?1
+ * минуты/часа: 2-4, ?2-?4
+ * минут/часов: 5-20, ?5-?9
  */
 
-if()
+function getTimeString($time)
+{
+  if ($time > 20) {
+    $time = fmod($time, 10);
+    echo $time;
+  }
+
+  if ($time == 1) {
+    return ['минута', 'час'];
+  } elseif ($time > 1 && $time < 5) {
+    return ['минуты', 'часа'];
+  } else {
+    return ['минут', 'часов'];
+  }
+}
+
+print_r(getTimeString(2));
 
 
+//echo date('G i');
 
-echo date('G i');
+//echo fmod(33,10);
