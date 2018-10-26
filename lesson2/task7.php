@@ -9,22 +9,26 @@
  * минут/часов: 5-20, ?5-?9
  */
 
-function getTimeString($time)
+/**
+ * @param $time { int } Время {минуты/часы}
+ * @param $type { string } Разновидность времени {'h'|'m'}
+ * @return mixed { string } Строковое представление времени
+ */
+function getTimeString($time, $type)
 {
   if ($time > 20) {
     $time = fmod($time, 10);
-    echo $time;
   }
 
   if ($time == 1) {
-    return ['минута', 'час'];
+    return ['m' => 'минута', 'h' => 'час'][$type];
   } elseif ($time > 1 && $time < 5) {
-    return ['минуты', 'часа'];
+    return ['m' => 'минуты', 'h' => 'часа'][$type];
   } else {
-    return ['минут', 'часов'];
+    return ['m' => 'минут', 'h' => 'часов'][$type];
   }
 }
 $h = +date('G');
 $m = +date('i');
 
-echo "$h ".getTimeString($h)[1]." $m ".getTimeString($m)[0];
+echo "$h ".getTimeString($h, 'h')." $m ".getTimeString($m, 'm');
