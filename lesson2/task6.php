@@ -13,4 +13,4 @@ function power($val, $pow)
   }
 }
 
-echo power(1, 2);
+echo power(5, 2);
