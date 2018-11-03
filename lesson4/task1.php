@@ -37,6 +37,7 @@ shuffle($arrFileFilter);
       <img src="images/min/<?= $file ?>" data-full_image_url="img<?= $file ?>" alt="Картинка <?= $file ?>">
     </a>
   <?php endforeach ?>
+  <?php var_dump(1)?>
 </div>
 
 </body>
