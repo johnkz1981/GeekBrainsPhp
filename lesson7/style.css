@@ -1,0 +1,42 @@
+.table {
+  display: grid;
+  grid-template-columns: 1fr 2fr repeat(3, 1fr);
+  width: 1000px;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 400px;
+  margin-top: 50px;
+  border: solid 1px orangered;
+  padding: 5px;
+}
+
+.basket {
+  display: grid;
+  grid-template-columns: 1fr 2fr repeat(5, 1fr);
+  width: 1000px;
+}
+
+.head {
+  color: blue;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.detail__column {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-size: xx-large;
+}
+
+.danger {
+  color: red;
+}
