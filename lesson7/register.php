@@ -8,7 +8,7 @@ function console($val)
 
 if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['name'])) {
   $login = $_POST['login'];
-  $pass = $_POST['pass'];
+  $pass = md5($_POST['password']);
   $name = $_POST['name'];
   $queryPass = "SELECT * FROM users where login='$login'";
   $queryPass = mysqli_query($link, $queryPass);
@@ -16,8 +16,7 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['name
   if(!$res){
     $insertUser = "INSERT INTO users (id, login, pass, name) VALUES (NULL, '$login', '$pass', '$name')";
     $queryPass = mysqli_query($link, $insertUser);
-    $resInsert = mysqli_fetch_assoc($queryPass);
-    console($resInsert);
+    $isInsert = $queryPass;
   }
 }
 ?>
@@ -35,6 +34,10 @@ if (!empty($_POST['login']) && !empty($_POST['password']) && !empty($_POST['name
 <body>
 <? if ($res): ?>
   <h3 class="danger">Такой логин уже зарегестрирован</h3>
+<? endif ?>
+
+<? if ($isInsert): ?>
+  <h3 class="success">Успешно зарегестрированны</h3>
 <? endif ?>
 <form class="register" action="" method="post">
   <input type="text" placeholder="login" name="login"><br>
