@@ -3,7 +3,13 @@
  * login: john
  * pass: 123
  */
+
 session_start();
+
+if ($_POST['add_order'] === 'success') {
+  header("Location: /");
+  exit;
+}
 include('bd.php');
 
 function console($val)
@@ -22,15 +28,46 @@ if (isset($_POST['del'])) {
 if (isset($_POST['add'])) {
   $_SESSION['basket']['good'][$_POST['add']]['count']++;
 }
-$arrId = '';
-$basketSession = $_SESSION['basket']['good'];
-foreach ($basketSession as $good_id => $item) {
-  if (is_numeric($good_id)) {
-    $arrId .= $good_id . ',';
-  };
+
+if (isset($_SESSION['basket']['good'])) {
+  $basketSession = $_SESSION['basket']['good'];
+  $q = implode(array_keys($basketSession), ',');
+  if ($q) {
+    $queryBasket = mysqli_query($link, "SELECT * FROM goods where id in($q)");
+    $products = [];
+    while ($row = mysqli_fetch_assoc($queryBasket)) {
+      $products[] = $row;
+    }
+  }
 }
-$q = substr($arrId, 0, strlen($arrId) - 1);
-$queryBasket = mysqli_query($link, "SELECT * FROM goods where id in($q)");
+
+$message = ['text' => '', 'class' => ''];
+if (isset($_POST['add_order'])) {
+  if ($_SESSION['login'] === null) {
+    $message['text'] = 'Вы не авторизованы';
+    $message['class'] = 'error';
+  } else {
+    $date = date('Y-m-d');
+
+    $jsonProducts = mysqli_real_escape_string($link, json_encode($products));
+
+    $insertUser = <<<SQL
+      INSERT INTO orders (id, products, id_user, status, date) VALUES
+      (NULL, '{$jsonProducts}', '{$_SESSION['login']}', '0', '{$date}')
+SQL;
+    $message['text'] = mysqli_query($link, $insertUser) or die(mysqli_error($link));
+    if (is_numeric(+$message['text'])) {
+      $message['text'] = 'Заказ успешно добавлен!';
+      $message['class'] = 'success';
+      $_GET['success'] = 1;
+      unset($_SESSION['basket']['good']);
+    } else {
+      $message['text'] = 'Заказ не удалось добавить';
+      $message['class'] = 'error';
+    }
+
+  }
+}
 
 ?>
 
@@ -47,6 +84,7 @@ $queryBasket = mysqli_query($link, "SELECT * FROM goods where id in($q)");
 <body>
 <div class="auth">
   <?php include('auth.php') ?>
+  <a href="admin.php">Orders</a>
 </div>
 <form action="" method="post">
   <div class="table">
@@ -81,34 +119,43 @@ $queryBasket = mysqli_query($link, "SELECT * FROM goods where id in($q)");
   </div>
 </div>
 <hr>
-<h2>Basket</h2>
-<form action="" method="post">
-  <div class="basket">
-    <label class="head">Title</label>
-    <label class="head">Description</label>
-    <label class="head">price</label>
-    <label class="head">count</label>
-    <label class="head">view</label>
-    <label class="head">delete</label>
-    <label class="head">add</label>
-    <? if($queryBasket): ?>
-    <? while ($row = mysqli_fetch_assoc($queryBasket)) : ?>
-      <div><?= $row['good'] ?></div>
-      <div><?= $row['description'] ?></div>
-      <div><?= $row['price'] ?></div>
-      <div><?= $basketSession[$row['id']]['count'] ?></div>
-      <div>
-        <button value="<?= $row['id'] ?>" name="id">view</button>
+<? if ($queryBasket): ?>
+  <h2>Basket</h2>
+  <form action="" method="post">
+    <div class="basket">
+      <label class="head">Title</label>
+      <label class="head">Description</label>
+      <label class="head">price</label>
+      <label class="head">count</label>
+      <label class="head">view</label>
+      <label class="head">delete</label>
+      <label class="head">add</label>
+
+      <? foreach ($products as $row) : ?>
+        <div><?= $row['good'] ?></div>
+        <div><?= $row['description'] ?></div>
+        <div><?= $row['price'] ?></div>
+        <div><?= $basketSession[$row['id']]['count'] ?></div>
+        <div>
+          <button value="<?= $row['id'] ?>" name="id">view</button>
+        </div>
+        <div>
+          <button value="<?= $row['id'] ?>" name="del">del</button>
+        </div>
+        <div>
+          <button value="<?= $row['id'] ?>" name="add">add</button>
+        </div>
+      <? endforeach ?>
+      <div class="">
+        <button value="<?= $message['class'] ?>" name="add_order" class="add-order">
+          <?= $message['class'] === 'success' ? 'Вернуться в магазин' : 'Add order' ?>
+        </button>
       </div>
-      <div>
-        <button value="<?= $row['id'] ?>" name="del">del</button>
+      <div class="">
+        <h3 value="" class="<?= $message['class'] ?> add-order"><?= $message['text'] ?></h3>
       </div>
-      <div>
-        <button value="<?= $row['id'] ?>" name="add">add</button>
-      </div>
-    <? endwhile ?>
-    <? endif ?>
-  </div>
-</form>
+    </div>
+  </form>
+<? endif ?>
 </body>
 </html>

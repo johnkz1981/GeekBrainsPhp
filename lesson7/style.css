@@ -32,7 +32,7 @@
 
 .auth {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   margin-bottom: 20px;
   font-size: xx-large;
 }
@@ -44,3 +44,50 @@
 .success {
   color: green;
 }
+
+.add-order {
+  margin-top: 20px;
+}
+
+.error {
+  color: red;
+  margin-bottom: 0;
+}
+
+.success {
+  color: green;
+  margin-bottom: 0;
+}
+
+.products_row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.orders {
+  border: red solid 1px;
+  margin: 2px;
+  padding: 5px;
+}
+
+.orders__detail {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 20px 0;
+  background: #aaaaaa;
+}
+
+.orders__button-reject {
+  background: red;
+  color: white;
+}
+
+.orders__button-delivery {
+  background: yellow;
+}
+
+.orders__button-success {
+  background: green;
+  color: white;
+}
+
