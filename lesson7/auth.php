@@ -8,10 +8,12 @@ if (isset($_POST['login']) && isset($_POST['pass'])) {
   $res = mysqli_fetch_assoc($queryPass);
   $_SESSION['login'] = $res['id'];
   $_SESSION['name'] = $res['name'];
+  $_SESSION['is_admin'] = $res['is_admin'];
 }
 if (isset($_POST['exit'])) {
   unset($_SESSION['login']);
   unset($_SESSION['name']);
+  unset($_SESSION['is_admin']);
 }
 ?>
 <style>

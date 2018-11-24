@@ -51,10 +51,10 @@ if (isset($_POST['add_order'])) {
 
     $jsonProducts = mysqli_real_escape_string($link, json_encode($products));
 
-    $insertUser = <<<SQL
+    $insertUser = "
       INSERT INTO orders (id, products, id_user, status, date) VALUES
-      (NULL, '{$jsonProducts}', '{$_SESSION['login']}', '0', '{$date}')
-SQL;
+      (NULL, '{$jsonProducts}', '{$_SESSION['login']}', 1, '{$date}')";
+
     $message['text'] = mysqli_query($link, $insertUser) or die(mysqli_error($link));
     if (is_numeric(+$message['text'])) {
       $message['text'] = 'Заказ успешно добавлен!';
@@ -83,9 +83,15 @@ SQL;
 </head>
 <body>
 <div class="auth">
-  <?php include('auth.php') ?>
-  <a href="admin.php">Orders</a>
+  <?php include('auth.php');
+  if($_SESSION['is_admin']):
+  ?>
+  <a href="admin.php">Заказы</a>
+  <?php elseif ($_SESSION['login'] !== null): ?>
+  <a href="profile.php">Личный кабинет</a>
+  <?php endif; ?>
 </div>
+
 <form action="" method="post">
   <div class="table">
     <label class="head">Title</label>
@@ -120,7 +126,7 @@ SQL;
 </div>
 <hr>
 <? if ($queryBasket): ?>
-  <h2>Basket</h2>
+  <h2>Корзина</h2>
   <form action="" method="post">
     <div class="basket">
       <label class="head">Title</label>

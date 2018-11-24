@@ -2,8 +2,10 @@
 session_start();
 
 include('bd.php');
+
+$idUser = (int)$_SESSION['login'];
 $query = "SELECT orders.id, products, status, id_user, users.name as users_name, status.name as status_name, is_admin
-   FROM orders JOIN users on id_user = users.id JOIN status on orders.status = status.id";
+   FROM orders JOIN users on id_user = users.id JOIN status on orders.status = status.id where id_user = $idUser";
 $ordersQuery = mysqli_query($link, $query);
 ?>
 
@@ -18,16 +20,17 @@ $ordersQuery = mysqli_query($link, $query);
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Админка</h2>
+<h2>Личный кабинет</h2>
 <?php
-if (!$_SESSION['is_admin']):
-  echo 'Доступ разрешен только администраторам!';
+if ($_SESSION['is_admin'] === null):
+  echo 'Вы не авторизированы';
   exit;
 ?>
 </body>
 </html>
 <?php
 endif;
+echo "<h3>{$_SESSION['name']}</h3>";
 
 while ($row = mysqli_fetch_assoc($ordersQuery)):
 
@@ -53,27 +56,20 @@ PRODUCT;
   <div>
   <input 
   type="button" 
-  value="отказано" 
+  value="отменить" 
   class="button-status orders__button-reject" 
   name="reject"
   data-id="{$row['id']}"
-  data-id_status="2"
+  data-id_status="1"
   data-button="status">
+  
   <input 
   type="button" 
-  value="отправлен" 
-  class="button-status orders__button-delivery" 
-  name="delivery"
-  data-id="{$row['id']}"
-  data-id_status="3"
-  data-button="status">
-  <input 
-  type="button" 
-  value="выполнено" 
+  value="повторить" 
   class="button-status orders__button-success" 
   name="success"
   data-id="{$row['id']}"
-  data-id_status="4"
+  data-id_status="5"
   data-button="status">
   </div>
   </div>

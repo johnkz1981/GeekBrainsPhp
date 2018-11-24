@@ -74,19 +74,22 @@
   display: flex;
   justify-content: space-evenly;
   margin: 20px 0;
+}
+
+.orders__detail-start {
   background: #aaaaaa;
 }
 
-.orders__button-reject {
+.orders__button-reject, .orders__detail-reject {
   background: red;
   color: white;
 }
 
-.orders__button-delivery {
+.orders__button-delivery, .orders__detail-delivery {
   background: yellow;
 }
 
-.orders__button-success {
+.orders__button-success, .orders__detail-success {
   background: green;
   color: white;
 }
